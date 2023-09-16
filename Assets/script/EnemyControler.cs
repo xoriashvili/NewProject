@@ -11,6 +11,7 @@ public class EnemyControler : MonoBehaviour
     private GameObject Player;
     public Animator animator;
     public int Heal;
+    public int Damage;
     
     #endregion
 
@@ -27,21 +28,34 @@ public class EnemyControler : MonoBehaviour
 
     void Update()
     {
-        agent.SetDestination(Player.transform.position);
+        
 
         if (Vector3.Distance(transform.position, Player.transform.position) < Range)
         {
             animator.SetTrigger("Attack");
 
         }
+        else
+        {
+            agent.SetDestination(Player.transform.position);
+        }
         
+        if(Heal <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
     #endregion
 
     #region MyFunction
     public void Attack()
     {
-        Player.GetComponent<Player>().Heal--;
+        if (Vector3.Distance(transform.position, Player.transform.position) < Range)
+        {
+            
+            Player.GetComponent<Player>().Heal -= Damage;
+        }
+        
     }
     #endregion
 
