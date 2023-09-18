@@ -8,11 +8,11 @@ public class EnemyControler : MonoBehaviour
     #region vars
     public NavMeshAgent agent;
     public float Range;
-    private GameObject Player;
     public Animator animator;
     public int Heal;
     public int Damage;
-    
+    public GameObject Player;
+    public Rigidbody rb;
     #endregion
 
 
@@ -21,24 +21,13 @@ public class EnemyControler : MonoBehaviour
     {
         
     }
-    private void Awake()
+   
+
+    void FixedUpdate()
     {
-        Player = FindAnyObjectByType<Player>().gameObject;
-    }
+        AttackAnimation();
 
-    void Update()
-    {
-        
-
-        if (Vector3.Distance(transform.position, Player.transform.position) < Range)
-        {
-            animator.SetTrigger("Attack");
-
-        }
-        else
-        {
-            agent.SetDestination(Player.transform.position);
-        }
+       
         
         if(Heal <= 0)
         {
@@ -50,14 +39,48 @@ public class EnemyControler : MonoBehaviour
     #region MyFunction
     public void Attack()
     {
-        if (Vector3.Distance(transform.position, Player.transform.position) < Range)
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position,transform.forward,out hit,Range))
         {
+            if(hit.transform.tag == "Player")
+            {
+                hit.transform.GetComponent<Player>().Heal -= Damage;
+            }
             
-            Player.GetComponent<Player>().Heal -= Damage;
+            
         }
         
     }
+    private void AttackAnimation()
+    {
+        
+        RaycastHit hit;
+        if (Physics.Raycast(new Vector3 (transform.position.x,transform.position.y+0.5f,transform.position.z), transform.forward, out hit, Range))
+        {
+            
+            if (hit.transform.tag == "Player")
+            {
+                
+                animator.SetTrigger("Attack");
+            }
+           
+ 
+        }
+        else if (Player != null && Vector3.Distance(transform.position,Player.transform.position) > Range)
+        {
+            agent.SetDestination(Player.transform.position);
+        }
+        if ((hit.transform == null || hit.transform.tag != "Player") && Player != null && Vector3.Distance(transform.position, Player.transform.position) < Range)
+        {
+            Vector3 direction = Player.transform.position - transform.position;
+            float angel = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, angel, 0);
+           
+            
+        }
+    }
     #endregion
-
+    
 
 }

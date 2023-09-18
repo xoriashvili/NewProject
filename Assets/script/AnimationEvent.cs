@@ -12,6 +12,7 @@ public class AnimationEvent : MonoBehaviour
         public UnityEvent CallEvent;
 
     }
+   
     public AnimEvent[] Animevent;
     public void SendEvent(string CallName)
     {
@@ -24,5 +25,6 @@ public class AnimationEvent : MonoBehaviour
             }
         }
     }
+
 
 }

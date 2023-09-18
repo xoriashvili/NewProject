@@ -37,6 +37,7 @@ public class TreeControler : MonoBehaviour
             IsCut = true;
 
             Destroy(transform.GetChild(0).gameObject);
+            gameObject.tag = "DestroyTree";
             Destroy(gameObject, 2);
         }
     }

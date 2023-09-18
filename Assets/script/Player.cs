@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     public int Damage;
     public GameObject log;
     public TextMeshProUGUI Text;
-    private int Bag;
+    public int Bag;
     #endregion
 
     #region unityfunction
@@ -118,10 +118,10 @@ public class Player : MonoBehaviour
                 
                for (int i = 0; i < 2; i++)
                {
-                    Bag++;
-                    GameObject Tlog = Instantiate(log, hit.point, Quaternion.identity);
-                    Tlog.GetComponent<Rigidbody>().velocity = new Vector3(2, 0, 0);
-                    Destroy(Tlog, 2);
+             
+                  GameObject Tlog = Instantiate(log, hit.point, Quaternion.identity);
+                    Tlog.GetComponent<Rigidbody>().velocity = new Vector3(0, 3, 0);
+
                }
             }
            
@@ -129,6 +129,7 @@ public class Player : MonoBehaviour
         
 
     }
+    
     
     #endregion
 
