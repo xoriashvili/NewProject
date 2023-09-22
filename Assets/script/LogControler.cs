@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LogControler : MonoBehaviour
 {
-    public Transform bag;
-    public Rigidbody Rb;
+    [SerializeField] Transform bag;
+    [SerializeField] Rigidbody Rb;
     int Counter;
     void Start()
     {

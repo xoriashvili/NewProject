@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform Player;
-    public float speed;
+    [SerializeField] Transform Player;
+    [SerializeField] float speed;
 
     void Start()
     {
@@ -16,8 +17,11 @@ public class CameraController : MonoBehaviour
     void Update()
     {
       
-
-            transform.position = Vector3.Lerp(transform.position, new Vector3(Player.position.x,Player.position.y + 4,Player.position.z - 3), speed);
+        if(Player != null)
+        {
+          transform.position = Vector3.Lerp(transform.position, new Vector3(Player.position.x,Player.position.y + 4,Player.position.z - 3), speed);
+        }
+           
      
 
 

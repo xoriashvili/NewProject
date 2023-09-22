@@ -1,25 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyControler : MonoBehaviour
 {
     #region vars
-    public NavMeshAgent agent;
-    public float Range;
-    public Animator animator;
-    public int Heal;
-    public int Damage;
-    public GameObject Player;
-    public Rigidbody rb;
+     [SerializeField] NavMeshAgent agent;
+     [SerializeField] float Range;
+     [SerializeField] Animator animator;
+     public int Heal;
+     [SerializeField] int Damage;
+     [SerializeField] GameObject Player;
+     [SerializeField] Rigidbody rb;
+    float MaxHeal;
+     [SerializeField] Image HealBar;
     #endregion
 
 
     #region unityfunction
     void Start()
     {
-        
+        MaxHeal = Heal;
     }
    
 
@@ -33,6 +37,9 @@ public class EnemyControler : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        float loss = Heal * 100 / MaxHeal;
+        HealBar.fillAmount = 1 * loss / 100;
     }
     #endregion
 

@@ -8,21 +8,29 @@ using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.XR;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditor;
+using Unity.Burst.CompilerServices;
 
 public class Player : MonoBehaviour  
 {
     #region vars
-    public float speed;
-    public Animator animator;
-    public Joystick joystick;
-    public Rigidbody rb;
+    [SerializeField] float speed;
+    [SerializeField] Animator animator;
+    [SerializeField] Joystick joystick;
+    [SerializeField] Rigidbody rb;
     public int Heal;
-    public float Distance;
+    [SerializeField] float Distance;
     private EnemyControler Enemy;
-    public int Damage;
-    public GameObject log;
-    public TextMeshProUGUI Text;
+    [SerializeField] int Damage;
+    [SerializeField] GameObject log;
+    [SerializeField] TextMeshProUGUI Text;
     public int Bag;
+    [SerializeField] Image HealBar;
+    [SerializeField] Transform AttackPoint;
+    [SerializeField] Vector3 AttackRAnge;
+    [SerializeField] LayerMask TargetLayer;
+
+    float MaxHeal;
     #endregion
 
     #region unityfunction
@@ -30,7 +38,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        MaxHeal = Heal;
     }
     private void Update()
     {
@@ -39,6 +47,10 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        float loss = Heal * 100 / MaxHeal;
+        HealBar.fillAmount = 1 * loss / 100;
+        
     }
 
     void FixedUpdate()
@@ -76,62 +88,54 @@ public class Player : MonoBehaviour
         }
        
     }
-
-    private void CheckEnemy()
+    
+    private  void CheckEnemy()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(new Vector3(transform.position.x,transform.position.y+1,transform.position.z),transform.forward,out hit,Distance))
-        {
-            
-            if (hit.transform.gameObject.tag == "Enemy")
-            {
-                
-                animator.SetTrigger("Attack");
-                Enemy = hit.transform.GetComponent<EnemyControler>();
-                
-            }else if(hit.transform.gameObject.tag == "Tree")
+       var Enemy = Physics.OverlapBox(AttackPoint.position, AttackRAnge,quaternion.identity,TargetLayer);
+       if(Enemy.Length != 0)
+       {
+            if (Enemy[0].transform.tag == "Enemy" || Enemy[0].transform.tag == "Tree")
             {
                 animator.SetTrigger("Attack");
-                
             }
-            
-        }
+           
+       }
+      
         
     }
     public void Attack()
     {
-        RaycastHit hit;
 
-        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), transform.forward, out hit, Distance))
+        var Enemy = Physics.OverlapBox(AttackPoint.position, AttackRAnge, quaternion.identity, TargetLayer);
+        if (Enemy.Length != 0)
         {
-
-            if (hit.transform.gameObject.tag == "Enemy")
+            if (Enemy[0].transform.tag == "Enemy")
             {
-
-                Enemy.Heal -= Damage;
-
-            }else if(hit.transform.gameObject.tag == "Tree")
+                Enemy[0].GetComponent<EnemyControler>().Heal -= Damage;
+            }
+            else if (Enemy[0].transform.tag == "Tree")
             {
-                StartCoroutine(hit.transform.gameObject.GetComponent<TreeControler>().CutSimulator());
-                hit.transform.gameObject.GetComponent<TreeControler>().Heal--;
-                
-               for (int i = 0; i < 2; i++)
-               {
-             
-                  GameObject Tlog = Instantiate(log, hit.point, Quaternion.identity);
+                StartCoroutine(Enemy[0].transform.gameObject.GetComponent<TreeControler>().CutSimulator());
+                Enemy[0].transform.gameObject.GetComponent<TreeControler>().Heal--;
+
+                for (int i = 0; i < 2; i++)
+                {
+
+                    GameObject Tlog = Instantiate(log,new Vector3(Enemy[0].transform.position.x, Enemy[0].transform.position.y + 1, Enemy[0].transform.position.z), Quaternion.identity);
                     Tlog.GetComponent<Rigidbody>().velocity = new Vector3(0, 3, 0);
 
-               }
+                }
             }
-           
         }
+        
+           
+        
         
 
     }
-    
-    
+
+
     #endregion
 
-
+    
 }
