@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEditor;
 using Unity.Burst.CompilerServices;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour  
 {
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
         Text.text = Bag.ToString(); 
         if(Heal <= 0)
         {
-            Destroy(gameObject);
+            SceneManager.LoadScene(1);
         }
 
         float loss = Heal * 100 / MaxHeal;

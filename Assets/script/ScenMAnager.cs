@@ -16,7 +16,7 @@ public class ScenMAnager : MonoBehaviour
     {
         
     }
-   public void ScenReload()
+   public void NextScen()
    {
         SceneManager.LoadScene(0);
    }
